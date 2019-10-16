@@ -26,4 +26,4 @@ RUN set -eux; \
 WORKDIR /root
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["sleep", "infinity"]
+CMD ["tail", "-f", "/dev/null"]
