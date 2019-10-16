@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM debian
 
 RUN set -eux; \
   apt-get update; \
