@@ -18,6 +18,7 @@ RUN set -eux; \
     net-tools \
     netcat \
     tar \
+    telnet \
     vim \
     wget \
     xz-utils \
