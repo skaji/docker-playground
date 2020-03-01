@@ -6,6 +6,8 @@ env DEBIAN_FRONTEND=noninteractive apt-get update
 env DEBIAN_FRONTEND=noninteractive apt-get install -y \
   build-essential \
   curl \
+  dstat \
+  gdb \
   git \
   less \
   libbz2-dev \
@@ -14,6 +16,8 @@ env DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libsqlite3-dev \
   libssl-dev \
   locales-all \
+  net-tools \
+  strace \
   sudo \
   tzdata \
   unzip \
@@ -27,6 +31,10 @@ apt-get autoremove -y
 apt-get clean -y
 rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
+echo Asia/Tokyo > /etc/timezone
+rm -f /etc/localtime
+dpkg-reconfigure -f noninteractive tzdata
+
 curl -fsSL -o /sbin/tini https://github.com/krallin/tini/releases/download/v0.18.0/tini
 chmod +x /sbin/tini
 
@@ -36,16 +44,20 @@ perl -i -nle 'if (/%sudo/) { print "%sudo ALL=(ALL) NOPASSWD: ALL" } else { prin
 su -l skaji -c '
   set -eux
   curl -fsSL https://git.io/perl-install | bash -s ~/perl
-  export PATH=/home/skaji/perl/bin:$PATH
   curl -fsSL https://git.io/cpm > ~/perl/bin/cpm
   chmod 755 ~/perl/bin/cpm
+  ~/perl/bin/change-shebang -f ~/perl/bin/cpm
   ~/perl/bin/cpm install -g IO::Socket::SSL
   rm -rf ~/.perl-cpm
   git clone https://bitbucket.org/skaji/dotfiles
+  dotfiles/bin/__get_peco_ghq.sh
   dotfiles/bin/__get_go.sh
   export GOPATH=$HOME
-  go get golang.org/x/tools/cmd/goimports
-  go get golang.org/x/lint/golint
+  ~/env/go/bin/go get golang.org/x/tools/cmd/goimports
+  ~/env/go/bin/go get golang.org/x/lint/golint
+  rm -rf ~/src
   cd dotfiles
   perl setup.pl
 '
+
+cp -f /home/skaji/dotfiles/bin/go.vim $(ls /usr/share/vim/vim*/syntax/go.vim)
