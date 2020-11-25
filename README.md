@@ -6,5 +6,6 @@ https://hub.docker.com/r/skaji/playground
 
 ```
 docker build -t skaji/playground .
+docker login
 docker push skaji/playground
 ```
